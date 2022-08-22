@@ -21,8 +21,16 @@ const (
 	GetWalletStatusUrl = baseUrl + "/v1/status/wallet"
 
 	// QUOTATION API
-	GetMarketsUrl     = baseUrl + "/v1/market/all"
-	GetMinutCandleUrl = baseUrl + "/v1/candles/minutes/"
+	GetMarketsUrl      = baseUrl + "/v1/market/all"
+	GetCandleUrl       = baseUrl + "/v1/candles"
+	GetMinuteCandleUrl = GetCandleUrl + "/minutes/"
+	GetDayCandleUrl    = GetCandleUrl + "/days?"
+	GetWeekCandleUrl   = GetCandleUrl + "/weeks?"
+	GetMonthCandleUrl  = GetCandleUrl + "/months?"
+)
+
+var (
+	Markets []model.MarketCode
 )
 
 func CallNoParamApi(url string) string {
