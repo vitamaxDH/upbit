@@ -1,26 +1,32 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"math/rand"
 	"time"
+	"upbit/api"
 	"upbit/api/quotation"
 )
 
-func main() {
-	// api.GetAssets()
-	rand.Seed(time.Now().UnixMilli())
-	// markets := quotation.GetMarkets()
-	// for _, market := range markets {
-	// 	log.Println(market)
-	// }
-	log.Println()
-	for _, minuteCandle := range quotation.GetMinuteCandle("KRW-MVL", 1, 5) {
-		log.Println(minuteCandle)
-	}
+// todo: timestamp 관련 util 함수 만들기
+//  docker 연동
+//	db 연동
+//  로컬 테스트
+//  Dockerfile 만들기
+//  ec2 배포
+//	rds free tier 구매
 
-	// exchange.GetChance("KRW-MVL")
-	// GetOrder(map[string]string{"uuid": uuid.NewString()})
-	// GetApiKeys()
-	// GetWalletStatus()
+func main() {
+	rand.Seed(time.Now().UnixMilli())
+	api.Markets = quotation.GetMarkets()
+	minuteCandles := quotation.GetMinuteCandleTo(10, "KRW-QKC", "2022-08-22 13:00:01", 3)
+	var firstTwoSum float64
+	for i, minuteCandle := range minuteCandles {
+		if i != 2 {
+			firstTwoSum += minuteCandle.HighPrice
+		} else {
+			fmt.Println("first two avg", firstTwoSum/2)
+		}
+		fmt.Printf("KST: %v TradePrice: %.2f\n", minuteCandle.CandleDateTimeKST, minuteCandle.HighPrice)
+	}
 }
