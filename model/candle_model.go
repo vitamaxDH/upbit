@@ -1,6 +1,6 @@
 package model
 
-type MinuteCandel struct {
+type Candle struct {
 	Market               string  `json:"market"`
 	CandleDateTimeUTC    string  `json:"candle_date_time_utc"`
 	CandleDateTimeKST    string  `json:"candle_date_time_kst"`
@@ -11,5 +11,27 @@ type MinuteCandel struct {
 	Timestamp            int64   `json:"timestamp"`
 	CandleAccTradePrice  float64 `json:"candle_acc_trade_price"`
 	CandleAccTradeVolume float64 `json:"candle_acc_trade_volume"`
-	Unit                 int     `json:"unit"`
+}
+
+type MinuteCandle struct {
+	Candle
+	Unit int32 `json:"unit"`
+}
+
+type DayCandle struct {
+	Candle
+	PrevClosingPrice    float64 `json:"prev_closing_price"`
+	ChangePrice         float64 `json:"change_price"`
+	ChangeRate          float64 `json:"change_rate"`
+	ConvertedTradePrice float64 `json:"converted_trade_price"`
+}
+
+type WeekCandle struct {
+	Candle
+	FirstDayOfPeriod string `json:"first_day_of_period"`
+}
+
+type MonthCandle struct {
+	Candle
+	FirstDayOfPeriod string `json:"first_day_of_period"`
 }
