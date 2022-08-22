@@ -25,7 +25,7 @@ func GetMinuteCandleTo(unit int32, market, to string, count int32) []model.Minut
 	}
 	util.AddQueryIfNotEmpty(&queries, "to", to)
 	claim := model.NewClaimForQuery(queries)
-	apiUrl := api.GetMinuteCandleUrl + strconv.Itoa(int(count)) + "?" + queries.Encode()
+	apiUrl := api.GetMinuteCandleUrl + strconv.Itoa(int(unit)) + "?" + queries.Encode()
 	result := api.CallGetApi(apiUrl, claim)
 
 	var minuteCandles []model.MinuteCandle
