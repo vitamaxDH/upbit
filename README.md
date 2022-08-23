@@ -5,7 +5,7 @@ I do not take any responsibility of any asset loss using apis in this repository
 
 
 ## Strategy
----
+
 1. Fetch the 10-minute candles every 10 minutes
 2. Check the 3 latest candles
 3. 최신 봉이 앞 2개 봉의 평균과 비슷할 경우 해당 마켓의 평균가 업데이트.
@@ -15,7 +15,7 @@ I do not take any responsibility of any asset loss using apis in this repository
     - 20분 더 기다린 후 기록해두었던 평균가보다 특정 퍼센트 이상 높을 경우 매매
 
 ## Model
----
+
 1. 구매 - default 3시간 보유 후 판매
 
 | column                  | type      | desc               |
