@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"math/rand"
 	"os"
@@ -21,19 +20,32 @@ import (
 func main() {
 	rand.Seed(time.Now().UnixMilli())
 	api.Markets = quotation.GetMarkets()
-	minuteCandles, err := quotation.GetMinuteCandleTo(10, "KRW-QKC", "2022-08-22 13:00:01", 3)
+	time := "2022-08-23 01:00:01"
+	minuteCandles, err := quotation.GetMinuteCandleTo(10, "KRW-ATOM", time, 3)
 	if err != nil {
 		log.Println(err)
 		os.Exit(1)
 	}
 
 	var firstTwoSum float64
-	for i, minuteCandle := range minuteCandles {
-		if i != 2 {
+	var lastPrice float64
+	candleSize := len(minuteCandles)
+	for i := candleSize - 1; i >= 0; i-- {
+		minuteCandle := minuteCandles[i]
+		if i != 0 {
 			firstTwoSum += minuteCandle.HighPrice
+			log.Printf("i: %d, price: %.f", i, minuteCandle.HighPrice)
 		} else {
-			fmt.Println("first two avg", firstTwoSum/2)
+			lastPrice = minuteCandle.HighPrice
+			log.Printf("i: %d, lastPrice: %.f", i, lastPrice)
 		}
-		fmt.Printf("KST: %v TradePrice: %.2f\n", minuteCandle.CandleDateTimeKST, minuteCandle.HighPrice)
+	}
+	firstTwoAvg := firstTwoSum / 2
+	somePctOfAvg := (firstTwoAvg / 100) * 2
+	log.Printf("%s firstTwo avg: %.f, lastPrice: %.f, somePrctOfAvg: %.f\n", time, firstTwoAvg, lastPrice, somePctOfAvg)
+	diff := lastPrice - firstTwoAvg
+	log.Printf("diff: %.f", diff)
+	if diff > somePctOfAvg {
+		log.Printf("firstTwo avg: %.f, lastPrice: %.f, somePrctOfAvg: %.f\n", firstTwoAvg, lastPrice, somePctOfAvg)
 	}
 }
