@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
+	"os"
 	"time"
 	"upbit/api"
 	"upbit/api/quotation"
@@ -19,7 +21,12 @@ import (
 func main() {
 	rand.Seed(time.Now().UnixMilli())
 	api.Markets = quotation.GetMarkets()
-	minuteCandles := quotation.GetMinuteCandleTo(10, "KRW-QKC", "2022-08-22 13:00:01", 3)
+	minuteCandles, err := quotation.GetMinuteCandleTo(10, "KRW-QKC", "2022-08-22 13:00:01", 3)
+	if err != nil {
+		log.Println(err)
+		os.Exit(1)
+	}
+
 	var firstTwoSum float64
 	for i, minuteCandle := range minuteCandles {
 		if i != 2 {

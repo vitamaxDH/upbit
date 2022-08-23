@@ -2,6 +2,7 @@ package quotation
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/url"
 	"strconv"
 	"upbit/api"
@@ -9,14 +10,23 @@ import (
 	"upbit/util"
 )
 
-func GetMinuteCandle(unit int32, market string, count int32) []model.MinuteCandle {
+func GetMinuteCandle(unit int32, market string, count int32) ([]model.MinuteCandle, error) {
 	return GetMinuteCandleTo(unit, market, "", count)
 }
 
-func GetMinuteCandleTo(unit int32, market, to string, count int32) []model.MinuteCandle {
+func GetMinuteCandleTo(unit int32, market, to string, count int32) ([]model.MinuteCandle, error) {
 	// todo: parameter validation
-	// unit: 1, 3, 5, 15, 10, 30, 60, 240
-	// market: check if all markets.contains(market)
+	switch unit {
+	case 1, 3, 5, 10, 15, 30, 60, 240:
+	default:
+		return nil, fmt.Errorf("unit should be one of 1, 3, 5, 10, 15, 30, 60, 240")
+	}
+	if err := api.ValidateMarket(market); err != nil {
+		return nil, err
+	}
+	if count < 1 || count > 200 {
+		return nil, fmt.Errorf("count should be greater than 0 and less than 201")
+	}
 	// to: yyyy-MM-dd'T'HH:mm:ss'Z' or yyyy-MM-dd HH:mm:ss
 	// count: min 1, max 200
 	queries := url.Values{
@@ -30,7 +40,7 @@ func GetMinuteCandleTo(unit int32, market, to string, count int32) []model.Minut
 
 	var minuteCandles []model.MinuteCandle
 	json.Unmarshal([]byte(result), &minuteCandles)
-	return minuteCandles
+	return minuteCandles, nil
 }
 
 func GetDayCandle(market string, count int32, convertingPriceUnit string) []model.DayCandle {

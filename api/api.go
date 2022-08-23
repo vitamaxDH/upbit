@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"upbit/model"
 
 	"io/ioutil"
@@ -63,4 +64,18 @@ func PrettyString(str string) string {
 	var prettyJSON bytes.Buffer
 	json.Indent(&prettyJSON, []byte(str), "", "    ")
 	return prettyJSON.String()
+}
+
+func ValidateMarket(market string) error {
+	exists := false
+	for _, marketCode := range Markets {
+		if market == marketCode.Market {
+			exists = true
+		}
+	}
+	if exists {
+		return nil
+	} else {
+		return fmt.Errorf("given market %s does not exist", market)
+	}
 }
